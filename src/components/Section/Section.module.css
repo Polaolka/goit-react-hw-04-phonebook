@@ -1,0 +1,23 @@
+.section {
+    border-radius: 10px;
+    margin: 0 auto 20px;
+    padding: 10px;
+
+    width: 1200px;
+    overflow: hidden;
+}
+.title {
+    color: rgb(55, 60, 70);
+    font-size: 30px;
+    text-align: center;
+    margin: 0 auto 10px;
+}
+.paper {
+    width: 400px;
+    min-height: auto;
+    padding: 10px 10px 20px;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+}

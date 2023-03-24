@@ -1,0 +1,25 @@
+.input {
+    margin: 10px auto 10px;
+    width: 90%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid rgb(55, 60, 70);
+    box-shadow: rgb(204, 219, 232) 1px 1px 3px 0px inset, rgba(255, 255, 255, 0.5) -1px -1px 3px 1px inset;
+}
+
+.label {
+    display: block;
+    color: dimgray;
+}
+
+.form {
+    padding-left: 15px;
+}
+.count {
+    font-size: 20px;
+    color: rgb(55, 60, 70);
+    margin: 10px 0 10px;
+}
+.number {
+    font-weight: bold;
+}
