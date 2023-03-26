@@ -1,103 +1,74 @@
-import React, { Component } from 'react';
+import { useState} from 'react';
 import { nanoid } from 'nanoid';
+import { useLocalStorage } from '../Hooks/useLocalStorage'
 import { Section } from './Section/Section';
 import { ContactsList } from './ContactsList/ContactsList';
 import { PhoneBook } from './PhoneBook/PhoneBook';
 import { Filter } from './Filter/Filter';
-import 'react-notifications/lib/notifications.css';
-import {
-  NotificationContainer,
-  NotificationManager,
-} from 'react-notifications';
 
-class App extends Component {
-  state = {
-    contacts: [
-      { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
-      { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
-      { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
-      { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
-    ],
-    filter: '',
-  };
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-  componentDidMount() {
-    const contacts = localStorage.getItem('contacts');
-    const parsedContacts = JSON.parse(contacts);
-    if (parsedContacts) {
-      this.setState({contacts: parsedContacts})
-    }
-  }
-  componentDidUpdate(prevProps, prevState) {
-    if (this.state.contacts !== prevState.contacts) {
-      localStorage.setItem('contacts', JSON.stringify(this.state.contacts))
-    }
-  }
+const LS_KEY = 'contacts';
 
-  addContact = ({ name, number }) => {
-    const contact = {
-      id: nanoid(),
-      name,
-      number,
-    };
-    const checkName = this.state.contacts.find(
+export default function App () {
+  const [contacts, setContacts] = useLocalStorage(LS_KEY, [
+    { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
+    { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
+    { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
+    { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
+  ]);
+  const [ filter, setFilter ] = useState('');
+
+
+  const addContact = (name, number) => {
+    const checkName = contacts.find(
       contact => contact.name === name
     );
     if (checkName) {
-      NotificationManager.warning(`${name} is already in contacts`)
+      toast(`${name} is already in contacts`);
       return;
     }
-    this.setState(({ contacts }) => ({
-      contacts: [contact, ...contacts]
-    }));
-    NotificationManager.success(`Contact ${name} added successfully`)
+    setContacts(s => [...s, {id: nanoid(), name: name, number: number}]);
+    toast(`Contact ${name} added successfully`);
+  };
+  
+  const deleteContact = contactId => {
+    setContacts(s => s.filter(contact => contact.id !== contactId));
+    toast.error('One contact has been deleted');
   };
 
-  deleteContact = contactId => {
-    this.setState(prevState => ({
-      contacts: prevState.contacts.filter(contact => contact.id !== contactId),
-    }));
-    NotificationManager.error('One contact has been deleted');
+  const changeFilter = e => {
+    setFilter(s => s = e.target.value);
   };
-
-  changeFilter = e => {
-    this.setState({ filter: e.currentTarget.value });
-  };
-
-  getVisibleContacts = () => {
-    const { filter, contacts } = this.state;
+  const getVisibleContacts = () => {
     const normalizedFilter = filter.toLowerCase();
     return contacts.filter(contact =>
       contact.name.toLowerCase().includes(normalizedFilter)
     );
   };
-
-  render() {
-    const { contacts, filter } = this.state;
     const totalcontactsCount = contacts.length;
-    const visibleContacts = this.getVisibleContacts();
+    const visibleContacts = getVisibleContacts();
 
     return (
       <>
         <Section title="Phonebook">
-          <PhoneBook onSubmit={this.addContact} />
+          <PhoneBook onSubmit={addContact} />
         </Section>
         <Section title="Contacts">
           <Filter
             value={filter}
-            onChange={this.changeFilter}
+            onChange={changeFilter}
             totalcontactsCount={totalcontactsCount}
           />
 
           <ContactsList
             contacts={visibleContacts}
-            onDeleteContact={this.deleteContact}
+            onDeleteContact={deleteContact}
           />
         </Section>
-        <NotificationContainer />
+        <ToastContainer autoClose={2500}/>
       </>
     );
   }
-}
 
-export default App;

@@ -2,8 +2,8 @@ import React from 'react';
 import css from '../ContactsList/ContactsList.module.css';
 import PropTypes from 'prop-types';
 
-export const ContactsList = ({ contacts, onDeleteContact }) => (
-  <ul className={css.listWrapper}>
+export const ContactsList = ({ contacts, onDeleteContact }) => {
+  return (<ul className={css.listWrapper}>
     {contacts.map(({ id, name, number }) => (
       <li key={id} className={css.contactItem}>
         <p className={css.name}>{name}:</p>
@@ -17,8 +17,8 @@ export const ContactsList = ({ contacts, onDeleteContact }) => (
         </button>
       </li>
     ))}
-  </ul>
-);
+  </ul>);
+};
 ContactsList.propTypes = {
   contacts: PropTypes.arrayOf(
     PropTypes.shape({
