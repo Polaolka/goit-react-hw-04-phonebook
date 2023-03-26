@@ -16,3 +16,6 @@ code {
 p {
   margin: 0;
 }
+body {
+  background-image: url('./Img/paper-texture.jpg');
+}
